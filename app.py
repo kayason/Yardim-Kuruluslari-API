@@ -1,0 +1,61 @@
+# -*- coding: cp1254 -*-
+import sys
+import locale
+
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+organizations = []
+
+@app.route('/organizations', methods=['POST'])
+def register_organization():
+    data = request.json
+    org_id = len(organizations) + 1  # Generate a unique ID for the organization
+    organization = {
+        "id": org_id,
+        "org_name": data.get("org_name", " -*- coding: cp1254 -*-"),
+        "subject": data.get("subject"),
+        "description": data.get("description")  # Add description field
+    }
+    organizations.append(organization)
+    return jsonify({"message": "Organization registered successfully", "id": org_id}), 201
+
+@app.route('/organizations', methods=['GET'])
+def list_organizations():
+    return jsonify(organizations)
+
+if __name__ == '__main__':
+    # Adding provided organization names and descriptions
+    organizations.extend([
+        {"id": 1, "org_name": "Kýzýlay Derneði (Türk Kýzýlayý)", "subject": "Humanitarian aid", "description": "Türk Kýzýlayý olarak da bilinen Kýzýlay Derneði, acil durumlar, felaketler ve çatýþmalar sýrasýnda yardým ve destek saðlayan bir insani yardým kuruluþudur. Kan baðýþý, felaket yardýmý ve saðlýk hizmetleri gibi çeþitli hizmetler sunar."},
+        {"id": 2, "org_name": "Yeþilay Cemiyeti (Derneði)", "subject": "Public health", "description": "Yeþilay Cemiyeti, baðýmlýlýk ve madde kullanýmýyla mücadelede kamu saðlýðýna odaklanýr. Baðýmlýlýkla mücadelede eðitim, önleme programlarý ve rehabilitasyon hizmetleri sunar."},
+        {"id": 3, "org_name": "UNICEF Türkiye Milli Komitesi", "subject": "Child welfare", "description": "UNICEF, Türkiye'de Milli Komite aracýlýðýyla faaliyet gösterir. Çocuk haklarýný destekler, ihtiyaç sahibi çocuklara saðlýk, eðitim ve koruma saðlar ve onlarýn refahý için çalýþýr."},
+        {"id": 4, "org_name": "Uluslararasý Çocuk Merkezi", "subject": "Child welfare", "description": "Bu, 'International Children's Center'ýn Türkçe çevirisidir. Muhtemelen uluslararasý ölçekte çocuklarýn refahý ve geliþimi için çalýþan bir organizasyonu ifade eder, ancak spesifik detaylar deðiþebilir."},
+        {"id": 5, "org_name": "Türk Psikologlar Derneði", "subject": "Psychology", "description": "Türk Psikologlar Derneði, Türkiye'deki psikologlar için bir meslek örgütüdür. Psikolojiyi bir bilim olarak tanýtmak, eðitim ve eðitim saðlamak ve nüfusun ruh saðlýðý ihtiyaçlarýný savunmak amacýyla çalýþýrlar."},
+        {"id": 6, "org_name": "Türk Hemþireler Derneði", "subject": "Nursing", "description": "Türk Hemþireler Derneði, Türkiye'deki hemþireleri temsil eder. Hemþirelik mesleðini ilerletmek, hemþirelere destek ve kaynak saðlamak ve yüksek standartlarda hemþirelik uygulamasýný ve hasta bakýmýný teþvik etmek için çalýþýrlar."},
+        {"id": 7, "org_name": "Türkiye Ýlaç Sanayii Derneði (TSÝD)", "subject": "Pharmaceuticals", "description": "Türkiye Ýlaç Sanayii Derneði, Türkiye'deki ilaç þirketlerini temsil eder. Ýlaç endüstrisi ile ilgili konular üzerinde, araþtýrma, geliþtirme ve düzenlemeler gibi konularda çalýþýrlar."},
+        {"id": 8, "org_name": "Araþtýrmacý Ýlaç Firmalarý Derneði (AÝFD)", "subject": "Pharmaceuticals", "description": "Bu, 'Association of Research-based Pharmaceutical Companies'nin Türkçe çevirisidir. Muhtemelen araþtýrma odaklý ilaç þirketlerini temsil eder."},
+        {"id": 9, "org_name": "Özel Hastaneler ve Saðlýk Kuruluþlarý Derneði (OHSAD)", "subject": "Healthcare", "description": "Özel Hastaneler ve Saðlýk Kuruluþlarý Derneði, Türkiye'deki özel saðlýk tesislerini temsil eder. Özel saðlýk hizmeti sunumu, düzenleme ve kalite iyileþtirmesi ile ilgili konularda çalýþýrlar."},
+        {"id": 10, "org_name": "Saðlýk Gönüllüleri Türkiye Derneði", "subject": "Healthcare", "description": "Saðlýk Gönüllüleri Türkiye Derneði, Türkiye'de saðlýk hizmetleri, saðlýk eðitimi ve insani yardým saðlamak amacýyla gönüllüleri harekete geçiren bir organizasyondur."},
+        {"id": 11, "org_name": "Sýðýnmacýlar ve Göçmenlerle Dayanýþma Derneði (SGDD)", "subject": "Refugee support", "description": "Sýðýnmacýlar ve Göçmenlerle Dayanýþma Derneði, Türkiye'deki sýðýnmacýlara ve göçmenlere destek saðlamayý amaçlar. Yasal yardým, eðitim, saðlýk hizmetleri ve sosyal destek gibi çeþitli hizmetler sunarlar."},
+        {"id": 12, "org_name": "Ýltica ve Göç Araþtýrmalarý Merkezi Derneði (ÝGAM)", "subject": "Refugee research", "description": "Ýltica ve Göç Araþtýrmalarý Merkezi, Türkiye'deki mülteciler, sýðýnmacýlar ve göç konularýyla ilgili araþtýrma ve savunma yapar. Mülteciler ve göçmenlerle ilgili politikalarý ve uygulamalarý iyileþtirmeyi amaçlarlar."},
+        {"id": 13, "org_name": "Mülteci Destek Derneði (MUDEM)", "subject": "Refugee support", "description": "Mülteci Destek Derneði, Türkiye'deki mültecilere yardým ve destek saðlar. Eðitim, saðlýk hizmetleri, geçim desteði ve mültecilerin sosyal entegrasyonu için programlar sunarlar."},
+        {"id": 14, "org_name": "Saðlýk Gereçleri Üreticileri ve Temsilcileri Derneði (SADER)", "subject": "Medical equipment", "description": "Saðlýk Gereçleri Üreticileri ve Temsilcileri Derneði, Türkiye'de týbbi ekipman üretimi ve daðýtýmýyla ilgilenen þirketleri temsil eder. Týbbi cihazlar için kalite standartlarý, düzenlemeler ve pazar eriþimi konularýnda çalýþýrlar."},
+        {"id": 15, "org_name": "Araþtýrmacý Týp Teknolojileri Üreticileri Derneði (ARTED)", "subject": "Medical technology", "description": "Araþtýrmacý Týp Teknolojileri Üreticileri Derneði, Türkiye'de týbbi teknolojilerin araþtýrýlmasý, geliþtirilmesi ve üretimiyle ilgilenen þirketleri temsil eder. Týbbi cihazlar için inovasyonu, kalite standartlarýný ve pazar eriþimini teþvik ederler."},
+        {"id": 16, "org_name": "Tüm Týbbi Cihaz Üreticileri Derneði (TUDER)", "subject": "Medical equipment", "description": "Tüm Týbbi Cihaz Üreticileri Derneði, Türkiye'deki týbbi cihaz endüstrisinde faaliyet gösteren þirketleri temsil eder. Týbbi cihazlar için düzenleme, pazar eriþimi ve endüstri standartlarý konularýnda çalýþýrlar."},
+        {"id": 17, "org_name": "Acil Ambulans Hekimleri Derneði (AAHD)", "subject": "Emergency medicine", "description": "Acil Ambulans Hekimleri Derneði, Türkiye'deki ambulans hizmetlerinde çalýþan acil týp profesyonellerini temsil eder. Acil týbbi bakým, eðitim ve ambulans personeli için protokoller konusunda çalýþýrlar."},
+        {"id": 18, "org_name": "Türkiye Gazeteciler Cemiyeti (Ýstanbul)", "subject": "Journalism", "description": "Türkiye Gazeteciler Cemiyeti, Ýstanbul'da faaliyet gösteren gazeteciler için bir meslek örgütüdür. Basýn özgürlüðünü korumak, gazetecilerin haklarýný savunmak ve gazetecilikte etik standartlarý teþvik etmek için çalýþýrlar."},
+        {"id": 19, "org_name": "Gazeteciler Cemiyeti (Ankara)", "subject": "Journalism", "description": "Gazeteciler Cemiyeti, Ankara'da faaliyet gösteren gazetecilere hizmet veren bir örgütür. Ýstanbul'daki muadili gibi, basýn özgürlüðünü korurlar, gazetecilere destek olurlar ve gazetecilikte profesyonel standartlarý yükseltmeyi amaçlarlar."},
+        {"id": 20, "org_name": "Medya ve Ýletiþim Akademisi Derneði (MÝADER)", "subject": "Media and communication", "description": "Medya ve Ýletiþim Akademisi, Türkiye'de medya ve iletiþim alanýnda eðitimi ve araþtýrmayý teþvik eden bir organizasyondur. Medya profesyonelleri ve öðrenciler için eðitim, atölye çalýþmalarý ve seminerler düzenlerler."},
+        {"id": 21, "org_name": "Türkiye Saðlýk Vakfý (TSV)", "subject": "Healthcare", "description": "Türkiye Saðlýk Vakfý, Türkiye'de halk saðlýðýný iyileþtirmeye adanmýþ bir kar amacý gütmeyen bir organizasyondur. Saðlýk eðitimi, hastalýk önleme ve dezavantajlý topluluklarýn saðlýk hizmetlerine eriþimini destekleyen çeþitli projeler üzerinde çalýþýrlar."},
+        {"id": 22, "org_name": "Saðlýk ve Sosyal Yardým Vakfý (SSYV)", "subject": "Healthcare and social assistance", "description": "Saðlýk ve Sosyal Yardým Vakfý, ihtiyaç sahibi bireylere ve toplumlara destek ve yardým saðlar. Saðlýk hizmetleri, sosyal hizmetler ve insani yardým konularýnda çalýþýrlar."},
+        {"id": 23, "org_name": "Anne Çocuk Eðitim Vakfý (AÇEV)", "subject": "Child and mother education", "description": "Anne Çocuk Eðitim Vakfý, Türkiye'de eðitimin kalitesini artýrmayý ve erken çocukluk döneminin geliþimini desteklemeyi amaçlar. Ebeveynlere ve çocuklara yönelik eðitim programlarý ve kaynaklar saðlarlar."},
+        {"id": 24, "org_name": "TOHUM Otizim Vakfý", "subject": "Autism", "description": "TOHUM Otizim Vakfý, Türkiye'de otizm spektrum bozukluðu olan bireylerin ve ailelerinin yaþamlarýný iyileþtirmeyi amaçlar. Otizm farkýndalýðý yaratýr, erken müdahale hizmetleri saðlar ve otizmli bireylerin eðitim ve istihdamýna destek olur."},
+        {"id": 25, "org_name": "Ýnsan Kaynaðýný Geliþtirme Vakfý (IKGV)", "subject": "Human resources development", "description": "Ýnsan Kaynaðýný Geliþtirme Vakfý, Türkiye'de iþgücü yeteneklerini geliþtirmeye odaklanan bir vakýftýr. Eðitim, meslek edindirme ve istihdam projeleri üzerinde çalýþýrlar."},
+        {"id": 26, "org_name": "Türkiye Ekonomik ve Sosyal Etüdler Vakfý (TESEV)", "subject": "Economic and social studies", "description": "Türkiye Ekonomik ve Sosyal Etüdler Vakfý, Türkiye'deki ekonomik ve sosyal kalkýnmayý desteklemeyi amaçlayan bir düþünce kuruluþudur. Araþtýrmalar yapar, politika önerileri sunar ve kamuoyunu bilgilendirirler."},
+        {"id": 27, "org_name": "Türk Kalp Vakfý", "subject": "Heart health", "description": "Türk Kalp Vakfý, Türkiye'de kalp saðlýðýný iyileþtirmeyi amaçlar. Kalp hastalýklarýyla mücadelede farkýndalýk yaratýr, eðitim programlarý düzenler ve kalp saðlýðýna eriþimi artýrmayý hedefler."},
+        {"id": 28, "org_name": "Çorbada Tuzun Olsun", "subject": "Social aid", "description": "Çorbada Tuzun Olsun, Türkiye'de yoksullara ve ihtiyaç sahiplerine yardým saðlamayý amaçlayan bir sosyal yardým kuruluþudur. Gýda yardýmý, barýnma destekleri ve diðer temel ihtiyaçlarýn karþýlanmasý için çalýþýrlar."}
+    ])
+
+    app.run(debug=True)
